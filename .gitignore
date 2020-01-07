@@ -54,3 +54,6 @@ __pypackages__/
 
 # mkdocs documentation
 /site
+
+# log files
+app/instance/app*.log
