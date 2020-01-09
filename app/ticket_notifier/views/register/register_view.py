@@ -4,6 +4,7 @@ from flask.views import MethodView
 from flask import make_response, request, jsonify
 from app.ticket_notifier.models.user import User
 from app.ticket_notifier.utils.helper import server_error
+from werkzeug.exceptions import HTTPException
 import json
 
 
@@ -44,11 +45,11 @@ class RegisterView(MethodView):
         except Exception as e:
             server_error(e)
 
-    def get(self):
+    def get(self, contact=None):
         """Handle GET request for this view. Url ---> /register"""
 
         try:
-            response = SalesData.get_total_revenue()
+            response = User.get_user(contact)
 
             return make_response(jsonify(response)), 200
         except HTTPException:

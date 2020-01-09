@@ -12,7 +12,7 @@ register_bp.add_url_rule(
     view_func=register_view,
     methods=['POST'])
 
-register_bp.add_url_rule(
-    '/register',
+register_view.add_url_rule(
+    '/register/<string:contact>',
     view_func=register_view,
     methods=['GET'])

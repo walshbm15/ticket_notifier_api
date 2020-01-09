@@ -1,4 +1,5 @@
 from app.ticket_notifier import db
+from sqlalchemy import or_
 from datetime import datetime, timedelta
 from flask import current_app
 
@@ -26,3 +27,12 @@ class User(db.Model):
         """
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def get_user(contact):
+        """Return user info from database
+        based on an email or phone number
+        """
+        user = User.query.filter(or_(User.email == contact, User.mobile == contact))
+
+        return user
