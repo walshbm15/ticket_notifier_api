@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+  # Postgres database
+  postgres:
+    image: postgres
+    ports: ["${PG_EXTERNAL_PORT:-5432}:5432"]
+    restart: always
+    volumes: ['pgdata:/var/lib/postgresql/data/']
+    environment:
+      POSTGRES_DB: "${PG_DB_NAME:-development}"
+
+volumes:
+  pgdata:
