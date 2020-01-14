@@ -57,3 +57,6 @@ __pypackages__/
 
 # log files
 app/instance/app*.log
+
+# ENV file
+.env

@@ -6,15 +6,14 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     SECRET = os.getenv('SECRET')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 class DevelopmentConfig(Config):
     """Configurations for Development."""
     DEBUG = True
     SECRET = 'dev'
-    instance_dir = os.path.dirname(os.path.abspath(__file__))
-    SQLALCHEMY_DATABASE_URI = "sqlite:///{}".format(os.path.join(instance_dir, "sqlite.db"))
+    DATABASE_URL = os.getenv('DATABASE_URL')
     LOG_LEVEL = "DEBUG"
     LOG_LOCATION = "app/instance/app.log"
 
@@ -24,6 +23,8 @@ class TestingConfig(Config):
     TESTING = True
     DEBUG = True
     SECRET = 'test'
+    instance_dir = os.path.dirname(os.path.abspath(__file__))
+    DATABASE_URL = "sqlite:///{}".format(os.path.join(instance_dir, "sqlite.db"))
 
 
 app_config = {
