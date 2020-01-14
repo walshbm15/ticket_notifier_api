@@ -15,4 +15,4 @@ register_bp.add_url_rule(
 register_view.add_url_rule(
     '/register/<string:contact>',
     view_func=register_view,
-    methods=['GET'])
+    methods=['GET', 'DELETE'])
