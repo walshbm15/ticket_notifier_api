@@ -51,3 +51,9 @@ class User(db.Model):
             return None
 
         return user
+
+    @staticmethod
+    def get_mobile_numbers():
+        users = User.query.with_entities(User.mobile).distinct()
+
+        return users

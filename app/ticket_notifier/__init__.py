@@ -1,4 +1,5 @@
 import os
+import boto3
 import logging
 import threading
 import requests
@@ -26,11 +27,26 @@ def do_stuff():
     with dataLock:
         while True:
             response = requests.get('https://www.lastweektickets.com/')
-            print(response.status_code)
-            print(response.text)
-            if "There are no upcoming tapings." in response.content:
-                # Send text/email
-                continue
+
+            if "There are no upcoming tapings." in response.text:
+                # Create client
+                client = boto3.client(
+                    "sns",
+                    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+                    region_name="us-east-1"
+                )
+
+                # Get all number to send notification to
+                # from app.ticket_notifier.models.user import User
+                numbers = ["3154300461"]#User.get_mobile_numbers()
+                for n in numbers:
+                    # TODO add logic if number is added another way than just area code + number
+                    if len(n) is 10:
+                        client.publish(
+                            PhoneNumber="+1" + n,
+                            Message="Hello World!"
+                        )
 
 
 def do_stuff_start():
