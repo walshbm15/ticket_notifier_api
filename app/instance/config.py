@@ -13,7 +13,7 @@ class DevelopmentConfig(Config):
     """Configurations for Development."""
     DEBUG = True
     SECRET = 'dev'
-    DATABASE_URL = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     LOG_LEVEL = "DEBUG"
     LOG_LOCATION = "app/instance/app.log"
 

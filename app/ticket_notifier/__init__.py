@@ -1,5 +1,7 @@
 import os
 import logging
+import threading
+import requests
 from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_cors import CORS
@@ -7,7 +9,36 @@ from flask_sqlalchemy import SQLAlchemy
 from app.instance.config import app_config
 
 
+POOL_TIME = 5  # Seconds
+# variables that are accessible from anywhere
+commonDataStruct = {}
+# lock to control access to variable
+dataLock = threading.Lock()
+# thread handler
+yourThread = threading.Thread()
+# Database variable
 db = SQLAlchemy()
+
+
+def do_stuff():
+    global commonDataStruct
+    global yourThread
+    with dataLock:
+        while True:
+            response = requests.get('https://www.lastweektickets.com/')
+            print(response.status_code)
+            print(response.text)
+            if "There are no upcoming tapings." in response.content:
+                # Send text/email
+                continue
+
+
+def do_stuff_start():
+    # Do initialisation stuff here
+    global yourThread
+    # Create your thread
+    yourThread = threading.Timer(POOL_TIME, do_stuff, ())
+    yourThread.start()
 
 
 def create_app(config_name="development"):
@@ -17,8 +48,6 @@ def create_app(config_name="development"):
     app.config.from_mapping(
         # a default secret that should be overridden by instance config
         SECRET_KEY="dev",
-        # store the database in the instance folder
-        DATABASE=os.path.join(app.instance_path, "sqlite.db"),
     )
 
     app.config.from_object(app_config[config_name])
@@ -43,5 +72,8 @@ def create_app(config_name="development"):
     from .views.register import register_bp
 
     app.register_blueprint(register_bp)
+
+    # Start thread to check site
+    do_stuff_start()
 
     return app
